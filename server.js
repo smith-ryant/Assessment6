@@ -105,6 +105,17 @@ app.get("/api/player", (req, res) => {
   }
 });
 
+app.post("/api/reset", (req, res) => {
+  try {
+    playerRecord.wins = 0;
+    playerRecord.losses = 0;
+    res.status(200).send("Score reset");
+  } catch (error) {
+    console.log("ERROR RESETTING SCORE", error);
+    res.sendStatus(400);
+  }
+});
+
 app.listen(8000, () => {
   console.log(`Listening on 8000`);
 });

@@ -180,9 +180,26 @@ const getAllBots = () => {
   });
 };
 
+function resetScore() {
+  fetch("/api/reset", { method: "POST" })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((message) => {
+      console.log(message);
+    })
+    .catch((error) => {
+      console.log("There was a problem resetting the score:", error);
+    });
+}
+
 drawBtn.addEventListener("click", drawFive);
 duelBtn.addEventListener("click", duel);
 playAgainBtn.addEventListener("click", reset);
 seeAllBtn.addEventListener("click", getAllBots);
 
+window.onload = resetScore;
 getPlayerStats();
