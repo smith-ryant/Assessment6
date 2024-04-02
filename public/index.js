@@ -169,10 +169,12 @@ const getPlayerStats = () => {
 
 const getAllBots = () => {
   axios.get("/api/robots").then(({ data }) => {
+    console.log(data);
     allBotsDiv.innerHTML = "";
 
     data.forEach((bot) => {
       let botHtml = makeRobotDisplayCard(bot);
+      console.log(botHtml);
       allBotsDiv.innerHTML += botHtml;
     });
   });

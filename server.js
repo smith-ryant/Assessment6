@@ -7,6 +7,16 @@ const playerRecord = {
   wins: 0,
   losses: 0,
 };
+// include and initialize the rollbar library with your access token
+var Rollbar = require("rollbar");
+var rollbar = new Rollbar({
+  accessToken: "361f9ecf7475457fa749bb1ab7a49511",
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
+
+// record a generic message and send it to Rollbar
+rollbar.log("Hello world!");
 
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
@@ -38,9 +48,13 @@ const calculateHealthAfterAttack = ({ playerDuo, compDuo }) => {
 
 app.get("/api/robots", (req, res) => {
   try {
+    let botsArr = bots; // Create a new array to hold the values of the bots
+    console.log(botsArr); // Log the value of botsArr to the console
+    rollbar.log("Getting bots");
     res.status(200).send(botsArr);
   } catch (error) {
     console.error("ERROR GETTING BOTS", error);
+    rollbar.error("Error getting bots");
     res.sendStatus(400);
   }
 });
@@ -48,17 +62,19 @@ app.get("/api/robots", (req, res) => {
 app.get("/api/robots/shuffled", (req, res) => {
   try {
     let shuffled = shuffle(bots);
+    rollbar.log("Shuffled bots");
     res.status(200).send(shuffled);
   } catch (error) {
     console.error("ERROR GETTING SHUFFLED BOTS", error);
+    rollbar.error("Error getting shuffled bots");
     res.sendStatus(400);
   }
 });
 
 app.post("/api/duel", (req, res) => {
   try {
+    rollbar.log("Dueling");
     const { compDuo, playerDuo } = req.body;
-
     const { compHealth, playerHealth } = calculateHealthAfterAttack({
       compDuo,
       playerDuo,
@@ -80,9 +96,11 @@ app.post("/api/duel", (req, res) => {
 
 app.get("/api/player", (req, res) => {
   try {
+    rollbar.log("Getting player stats");
     res.status(200).send(playerRecord);
   } catch (error) {
     console.log("ERROR GETTING PLAYER STATS", error);
+    rollbar.error("Error getting player stats");
     res.sendStatus(400);
   }
 });
